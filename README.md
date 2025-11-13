@@ -1,9 +1,9 @@
 
-  # Mobile Expense Tracker App (Community)
+  # Expense Tracker App 
+  
+此程序为25秋NJU软件工程关于记账本小程序的实现
 
-  This is a code bundle for Mobile Expense Tracker App (Community). The original project is available at https://www.figma.com/design/mEj8IQcASkq3UtkuHLug5K/Mobile-Expense-Tracker-App--Community-.
-
-  ## Running the code
+  ## How to Run the code？
 
   Run `npm i` to install the dependencies.
 
