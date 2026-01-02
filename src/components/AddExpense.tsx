@@ -60,6 +60,46 @@ export function AddExpense({ onBack }: AddExpenseProps) {
 
   const categories = type === 'expense' ? expenseCategories : incomeCategories;
 
+  const handleAmountChange = (value: string) => {
+    // 拦截负数：如果包含负号，保持当前值不变（不更新）
+    if (value.includes('-')) {
+      // 不更新状态，保持原值，这样输入框的值不会变成负数
+      return;
+    }
+    
+    // 处理空值
+    if (value === '') {
+      setAmount('');
+      return;
+    }
+    
+    // 处理单独的小数点
+    if (value === '.') {
+      setAmount('.');
+      return;
+    }
+    
+    // 验证并限制为最多2位小数
+    // 匹配：整数 或 整数.小数（最多2位）
+    const validPattern = /^\d+(\.\d{0,2})?$/;
+    
+    if (validPattern.test(value)) {
+      // 值完全符合格式，直接设置
+      setAmount(value);
+    } else {
+      // 尝试提取有效部分（最多2位小数）
+      // 例如：10.12345 -> 10.12
+      const match = value.match(/^(\d+)(\.\d{0,2})?/);
+      if (match && match[0]) {
+        setAmount(match[0]);
+      } else {
+        // 如果完全不匹配有效格式，不更新值（保持原值）
+        // 这样可以防止无效字符被输入
+        return;
+      }
+    }
+  };
+
   const handleDescriptionChange = (value: string) => {
     setDescription(value);
     
@@ -182,11 +222,12 @@ export function AddExpense({ onBack }: AddExpenseProps) {
                 </span>
                 <Input
                   id="amount"
-                  type="number"
+                  type="text"
+                  inputMode="decimal"
                   step="0.01"
                   placeholder="0.00"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => handleAmountChange(e.target.value)}
                   className="pl-12 text-3xl h-16 text-center border-2 focus:border-primary"
                   required
                 />
