@@ -1,0 +1,33 @@
+name: Expense App CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. 检出代码
+        uses: actions/checkout@v4
+
+      - name: 2. 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm' 
+
+      - name: 3. 安装依赖
+        run: npm ci 
+
+      - name: 4. 执行单元测试 
+        run: npx vitest run --coverage
+
+      - name: 5. 执行集成测试 
+        run: npx vitest run src/components/integration.test.tsx
+
+      - name: 6. 尝试打包构建
+        run: npm run build
