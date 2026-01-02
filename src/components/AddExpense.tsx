@@ -87,15 +87,23 @@ export function AddExpense({ onBack }: AddExpenseProps) {
       // 值完全符合格式，直接设置
       setAmount(value);
     } else {
-      // 尝试提取有效部分（最多2位小数）
+      // 检查是否包含非数字字符（除了数字、小数点和最多2位小数）
+      // 如果输入包含字母或其他非数字字符，清空输入框
+      const hasNonNumericChars = /[^\d.]/.test(value);
+      if (hasNonNumericChars) {
+        // 包含非数字字符，清空输入框
+        setAmount('');
+        return;
+      }
+      
+      // 如果没有非数字字符，可能是小数位数超过2位的情况
       // 例如：10.12345 -> 10.12
       const match = value.match(/^(\d+)(\.\d{0,2})?/);
       if (match && match[0]) {
         setAmount(match[0]);
       } else {
-        // 如果完全不匹配有效格式，不更新值（保持原值）
-        // 这样可以防止无效字符被输入
-        return;
+        // 如果完全不匹配有效格式，清空输入框
+        setAmount('');
       }
     }
   };
